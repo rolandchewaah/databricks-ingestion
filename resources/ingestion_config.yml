@@ -1,9 +1,9 @@
-resources:
-  jobs:
-    ingestion_pipeline_job:
-      name: "[${bundle.target}] Data Ingestion Job"
-      tasks:
-        - task_key: run_ingestion
-          existing_cluster_id: 1234-567890-pick1 # Or define a new_cluster
-          spark_python_task:
-            python_file: ../src/ingestion_job.py
+# resources:
+#   jobs:
+#     ingestion_pipeline_job:
+#       name: "[${bundle.target}] Data Ingestion Job"
+#       tasks:
+#         - task_key: run_ingestion
+#           existing_cluster_id: 1234-567890-pick1 # Or define a new_cluster
+#           spark_python_task:
+#             python_file: ../src/ingestion_job.py
