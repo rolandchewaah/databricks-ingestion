@@ -2,6 +2,7 @@ resources:
   jobs:
     ingestion_pipeline_job:
       name: "[${bundle.target}] Data Ingestion Job"
+
       job_clusters:
         - job_cluster_key: ingest_cluster
           new_cluster:
@@ -12,5 +13,5 @@ resources:
       tasks:
         - task_key: irun_ingestion
           job_cluster_key: ingest_cluster
-          notebook_task:
+          spark_python_task:
             python_file: ../src/ingestion_job.py
