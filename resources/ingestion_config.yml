@@ -13,4 +13,4 @@ resources:
         - task_key: irun_ingestion
           job_cluster_key: ingest_cluster
           notebook_task:
-            notebook_path: ../src/ingestion_job.py
+            python_file: ../src/ingestion_job.py
