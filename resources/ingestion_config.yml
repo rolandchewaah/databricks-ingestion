@@ -2,8 +2,15 @@ resources:
   jobs:
     ingestion_pipeline_job:
       name: "[${bundle.target}] Data Ingestion Job"
+      job_clusters:
+        - job_cluster_key: ingest_cluster
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: Standard_D2as_v5
+            num_workers: 1
+
       tasks:
-        - task_key: run_ingestion
-          existing_cluster_id: 1234-567890-pick1 # Or define a new_cluster
-          spark_python_task:
-            python_file: ../src/ingestion_job.py
+        - task_key: irun_ingestion
+          job_cluster_key: ingest_cluster
+          notebook_task:
+            notebook_path: ../src/ingestion_job.py
