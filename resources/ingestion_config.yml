@@ -2,6 +2,7 @@ resources:
   jobs:
     ingestion_pipeline_job:
       name: "[${bundle.target}] Data Ingestion Job"
+
       job_clusters:
         - job_cluster_key: ingest_cluster
           new_cluster:
