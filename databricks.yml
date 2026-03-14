@@ -1,0 +1,23 @@
+bundle:
+  name: ingestion-platform
+
+targets:
+  dev:
+    workspace:
+      host: https://adb-xxx.azuredatabricks.net
+    mode: development
+
+  prod:
+    workspace:
+      host: https://adb-yyy.azuredatabricks.net
+    run_as:
+      service_principal_client_id: ${{secrets.AZURE_CLIENT_ID}}
+
+artifacts:
+  default:
+    type: whl
+    path: .
+
+resources:
+  include:
+    - resources/*.yml
