@@ -1,5 +1,3 @@
-name: Deploy Databricks Bundle
-
 on:
     push:
       branches:
@@ -8,15 +6,33 @@ on:
         - '.github/**'
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
+      - name: Install dependencies
+        run: |
+          pip install pyspark==3.5.0 pytest chispa
+
+      - name: Run Pytest
+        run: |
+          pytest tests/
+
+  deploy:
+    needs: test  # This ensures deployment only happens if tests pass
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Databricks CLI
+        run: curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+      
       - name: Deploy to Dev
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}

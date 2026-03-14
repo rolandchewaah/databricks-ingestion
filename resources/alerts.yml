@@ -1,0 +1,27 @@
+resources:
+  alerts:
+    ingestion_staleness_alert:
+      display_name: "Stale Data Alert - ${bundle.target}"
+      # The SQL query to evaluate
+      query_text: |
+        SELECT count(*) as record_count 
+        FROM ${var.catalog}.${var.schema}.bronze_events 
+        WHERE ingested_at > current_timestamp() - INTERVAL 2 HOURS
+      
+      warehouse_id: ${var.warehouse_id} # Link to your SQL Warehouse
+      
+      evaluation:
+        comparison_operator: "LESS_THAN"
+        threshold:
+          value: 1
+        # Notify when record count is 0 in the last 2 hours
+        notification:
+          on_ok: true
+          retrigger_seconds: 3600 # Don't spam; wait 1 hour to re-alert
+          subscriptions:
+            - user_name: "oncall@yourdomain.com"
+
+      schedule:
+        quartz_cron_schedule: "0 0 * * * ?" # Run every hour
+        timezone_id: "UTC"
+        pause_status: "UNPAUSED"

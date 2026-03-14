@@ -1,16 +1,21 @@
 resources:
   jobs:
     ingestion_pipeline_job:
-      name: "[${bundle.target}] Data Ingestion Job"
-      job_clusters:
-        - job_cluster_key: ingest_cluster
-          new_cluster:
-            spark_version: 15.4.x-scala2.12
-            node_type_id: Standard_DS3_v2
-            num_workers: 1
-
+      name: "[${bundle.target}] Secured Ingestion"
+      # ... other job settings ...
+      email_notifications:
+        on_failure:
+          - "alerts@yourdomain.com"
+        on_success:
+          - "data-team@yourdomain.com"
+        no_alert_for_skipped_runs: true
       tasks:
         - task_key: run_ingestion
-          job_cluster_key: ingest_cluster
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "Standard_DS3_v2"
+            # Best Practice: Inject secrets into environment variables
+            spark_env_vars:
+              STORAGE_KEY: "{{secrets/akv-ingestion-scope/datalake-access-key}}"
           spark_python_task:
-            python_file: ../src/ingestion_job.py
+            python_file: "../src/ingestion_job.py"
